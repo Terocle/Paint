@@ -229,7 +229,7 @@ def firstroot():
     it1 = tkinter.IntVar()
     text1 = ttk.Entry(textvariable=it1)
     text1.pack(anchor=N, padx=8, pady=8)
-    label2 = ttk.Label(text="Введите ширину:", padding=(0, 20, 0, 0))
+    label2 = ttk.Label(text="Введите высоту:", padding=(0, 20, 0, 0))
     label2.pack()
     it2 = tkinter.IntVar()
     text2 = ttk.Entry(textvariable=it2)
