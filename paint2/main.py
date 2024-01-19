@@ -4,7 +4,6 @@ from tkinter import colorchooser, filedialog, ttk
 from PIL import Image, ImageGrab
 import time
 
-# Починить масштабирование внутри PhotoImage
 # Добавить вставку текста
 # Добавить фильтры
 # Добавить алгоритм отрисовки окружности при изменении размера карандаша
@@ -22,6 +21,8 @@ firstopen = True
 
 
 def paint(event):
+    """Рисует круг (или ставит пиксель, если выбран инструмент 'карандаш') на холсте, при зажатой левой кнопки мыши;
+    event - произошедшее событие."""
     global brush_size
     global color
     if (pixel_flag == False):
@@ -39,22 +40,29 @@ def paint(event):
 
 
 def cr_line():
+    """Рисует линию, которая соединяет два круга, созданных в функции paint(). Координаты для линии берутся из списков
+    lx и ly."""
     field.create_line(lx[0], ly[0], lx[1], ly[1], fill=color, width=brush_size * 2)
     lx.remove(lx[0])
     ly.remove(ly[0])
 
 
 def brelease(event):
+    """Отчищает списки с координатами для линий, если левая кнопка мыши отжата;
+    event - произошедшее событие."""
     lx.clear()
     ly.clear()
 
 
 def size_change(new_size):
+    """Меняет размер кисти на выбранный;
+    new_size - радиус круга из функции paint()."""
     global brush_size
     brush_size = int(new_size)
 
 
 def color_change():
+    """Меняет цвет на выбранный."""
     global color
     global lcolor
     (rgb, hx) = colorchooser.askcolor()
@@ -63,23 +71,25 @@ def color_change():
 
 
 def clear_canvas():
+    """Полностью очищает canvas, устанавливает белый фон."""
     field.delete('all')
     field['bg'] = 'white'
 
 
 def pour():
+    """Полностью очищает canvas, устанавливает фон с таким же цветом, как и у кисти."""
     field.delete('all')
     field['bg'] = color
 
 
 def eraser():
+    """Меняет цвет кисти на белый."""
     global color
     color = 'white'
 
 
 def brush():
-    delbind()
-    rebind()
+    """Выбирает режим 'кисть' для функции paint()."""
     global color
     color = lcolor
     global pixel_flag
@@ -87,6 +97,7 @@ def brush():
 
 
 def save_img():
+    """Высчитывает координаты холста и сохраняет изображение скриншотом в формате PNG"""
     time.sleep(1)
     xs = root.winfo_rootx() + field.winfo_x()
     ys = root.winfo_rooty() + field.winfo_y()
@@ -98,18 +109,17 @@ def save_img():
 
 
 def pixel_brush():
-    delbind()
-    rebind()
+    """Выбирает режим 'карандаш' для функции paint()."""
+    global color
+    color = lcolor
     global pixel_flag
     pixel_flag = True
 
-
+'''
 def counter():
     field.itemconfigure("qwerty", image=img)
     field.after(1, counter)
 
-
-'''
 def hand():
     delbind()
     field.bind("<MouseWheel>", do_zoom)
@@ -126,12 +136,14 @@ def do_zoom(event):
 
 
 def rebind():
+    """Устанавливает привязки кнопок мыши."""
     field.bind("<ButtonPress>", paint)
     field.bind("<B1-Motion>", paint)
     field.bind("<ButtonRelease>", brelease)
 
 
 def delbind():
+    """Удаляет все привязки кнопок мыши."""
     field.unbind("<ButtonPress>")
     field.unbind("<B1-Motion>")
     field.unbind("<ButtonRelease>")
@@ -140,6 +152,7 @@ def delbind():
 
 
 def open_img():
+    """Открывает изображение, выбранное пользователем, в формате PNG. Пересоздает окно."""
     global new_w, new_h
     global img
     toImg = filedialog.askopenfilename(filetypes=[("PNG", ".png")])
@@ -150,6 +163,8 @@ def open_img():
 
 
 def w_and_h(fname):
+    """Узнает размеры, открываемого изображения;
+    fname - путь к изображению."""
     global new_w, new_h
     tempimg = PhotoImage(file=fname)
     new_w = tempimg.width()
@@ -157,6 +172,10 @@ def w_and_h(fname):
 
 
 def create_root(cwidth, cheight, sImg):
+    """Создает окно, canvas и элементы меню;
+    cwidth - ширина окна;
+    cheight - высота окна;
+    sImg - путь к изображению."""
     global field
     global root
     global firstopen
@@ -219,6 +238,7 @@ def create_root(cwidth, cheight, sImg):
 
 
 def firstroot():
+    """Создает начальное окно для выбора размеров холста."""
     global froot,text1,text2
     froot = Tk()
     froot.title('Начальное окно')
@@ -239,6 +259,7 @@ def firstroot():
     froot.mainloop()
 
 def check_var():
+    """Проверяет значения введенные пользователем."""
     t1 = text1.get()
     t2 = text2.get()
     if int(t1) > 249 and int(t2) > 249:
@@ -247,6 +268,7 @@ def check_var():
 
 
 def create_newImg():
+    """Уничтожает начальное окно и вызывает функцию создания холста с размерами, заданными пользователем."""
     t1 = text1.get()
     t2 = text2.get()
     froot.destroy()
@@ -254,4 +276,3 @@ def create_newImg():
 
 
 firstroot()
-# counter()
