@@ -11,6 +11,8 @@ class Brush():
         self.color = 'black'
         self.lcolor = 'black'
         self.pixel_flag = False
+        print(type(self.brush_size))
+        print(type(self.lx))
 
 
 
